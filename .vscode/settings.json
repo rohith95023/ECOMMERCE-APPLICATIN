@@ -1,0 +1,11 @@
+{
+    "python.analysis.extraPaths": [
+        "C:\\Users\\gpava\\AppData\\Roaming\\Python\\Python314\\site-packages"
+    ],
+    "python.defaultInterpreterPath": "C:\\Python314\\python.exe",
+    "python.analysis.typeCheckingMode": "off",
+    "python.linting.enabled": false,
+    "css.validate": false,
+    "less.validate": false,
+    "scss.validate": false
+}
