@@ -56,10 +56,11 @@ const Navbar = () => {
 
             {user ? (
               <div className="hidden md:flex items-center gap-1 ml-2">
-                <div className="flex flex-col items-end mr-3">
+                <Link to="/profile" className="flex flex-col items-end mr-3 hover:opacity-70 transition-opacity">
                   <span className="text-xs font-bold text-slate-900">{user.full_name}</span>
                   <span className="text-[10px] text-slate-400 capitalize">{user.role}</span>
-                </div>
+                </Link>
+                <div className="w-px h-8 bg-slate-100 mx-2" />
                 <Button variant="ghost" onClick={logout} className="!p-2.5 !px-3 !rounded-xl hover:bg-red-50 hover:text-red-600">
                   <LogOut size={18} />
                 </Button>
@@ -108,7 +109,10 @@ const Navbar = () => {
                     </Link>
                   </>
                 ) : (
-                  <Button variant="outline" onClick={logout} className="w-full !text-red-600 !border-red-100">Logout</Button>
+                  <>
+                    <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold">My Profile</Link>
+                    <Button variant="outline" onClick={logout} className="w-full !text-red-600 !border-red-100">Logout</Button>
+                  </>
                 )}
               </div>
             </div>

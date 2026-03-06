@@ -1,0 +1,20 @@
+import requests
+
+def test_register():
+    url = "http://127.0.0.1:4000/api/auth/register"
+    payload = {
+        "full_name": "Test User",
+        "email": "test@test.com",
+        "phone": "9876543210",
+        "password": "Password123",
+        "role": "customer"
+    }
+    try:
+        response = requests.post(url, json=payload)
+        print(f"Status: {response.status_code}")
+        print(f"Response: {response.text}")
+    except Exception as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    test_register()

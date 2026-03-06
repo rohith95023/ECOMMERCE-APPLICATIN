@@ -8,18 +8,26 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    if (token && storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      } catch {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+    const checkAuth = async () => {
+      const token = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('user');
+      
+      if (token && storedUser) {
+        try {
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          // Refresh profile from DB to sync role/status changes
+          const res = await axios.get('/api/auth/me');
+          setUser(res.data);
+          localStorage.setItem('user', JSON.stringify(res.data));
+        } catch (err) {
+          console.error("Session expired or invalid", err);
+          logout();
+        }
       }
-    }
-    setLoading(false);
+      setLoading(false);
+    };
+    
+    checkAuth();
   }, []);
 
   // Login using OAuth2 form (FastAPI expects username + password form data)
@@ -36,11 +44,10 @@ export function AuthProvider({ children }) {
     localStorage.setItem('token', access_token);
     axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
 
-    const profile = {
-      full_name: email.split('@')[0],
-      email,
-      role: email.toLowerCase().includes('owner') ? 'owner' : 'customer',
-    };
+    // Fetch real profile from backend
+    const profileRes = await axios.get('/api/auth/me');
+    const profile = profileRes.data;
+    
     setUser(profile);
     localStorage.setItem('user', JSON.stringify(profile));
     return response.data;

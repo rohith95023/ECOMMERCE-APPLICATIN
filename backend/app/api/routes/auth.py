@@ -3,6 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
 from ...schemas.schemas import UserCreate, UserResponse, Token
 from ...core.auth import authenticate_user, create_access_token, get_password_hash
+from ..deps import get_current_active_user
 from ...db.database import get_database
 from ...core.config import settings
 from datetime import datetime
@@ -40,3 +41,8 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db=Depends(get
         data={"sub": user["email"], "role": user["role"]}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+@router.get("/me", response_model=UserResponse)
+async def get_me(current_user=Depends(get_current_active_user)):
+    current_user["_id"] = str(current_user["_id"])
+    return current_user

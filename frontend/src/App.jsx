@@ -8,7 +8,9 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Cart from './pages/Cart';
+import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
+import MyOrders from './pages/MyOrders';
 
 const queryClient = new QueryClient();
 
@@ -34,7 +36,8 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
-                <Route path="/orders" element={<PrivateRoute><div>Orders Page (TBD)</div></PrivateRoute>} />
+                <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                <Route path="/orders" element={<PrivateRoute><MyOrders /></PrivateRoute>} />
                 <Route path="/admin" element={<PrivateRoute role="owner"><AdminDashboard /></PrivateRoute>} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>

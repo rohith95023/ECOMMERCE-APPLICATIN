@@ -3,6 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from .core.config import settings
 from .db.database import connect_to_mongo, close_mongo_connection
 from .api.routes import auth, categories, products, orders, notifications
+import traceback
+import logging
+
+logger = logging.getLogger("uvicorn.error")
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
@@ -20,6 +24,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    logger.error(f"Global exception: {exc}")
+    logger.error(traceback.format_exc())
+    return JSONResponse(
+        status_code=500,
+        content={"detail": str(exc)},
+    )
+
+from fastapi.responses import JSONResponse
 
 @app.on_event("startup")
 async def startup_event():

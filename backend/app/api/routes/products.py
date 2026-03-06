@@ -9,8 +9,8 @@ from datetime import datetime
 router = APIRouter(prefix="/products", tags=["products"])
 
 @router.get("", response_model=List[ProductResponse])
-async def list_products(category_id: Optional[str] = None, db=Depends(get_database)):
-    query = {"is_available": True}
+async def list_products(category_id: Optional[str] = None, include_hidden: bool = False, db=Depends(get_database)):
+    query: dict = {} if include_hidden else {"is_available": True}
     if category_id:
         query["category_id"] = category_id
     
